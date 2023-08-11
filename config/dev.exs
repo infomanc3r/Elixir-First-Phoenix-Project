@@ -2,8 +2,8 @@ import Config
 
 # Configure your database
 config :elixir_first_phoenix_project, ElixirFirstPhoenixProject.Repo,
-  username: "postgres",
-  password: "postgres",
+  username: "backend_stuff",
+  password: "blork_backend",
   hostname: "localhost",
   database: "elixir_first_phoenix_project_dev",
   stacktrace: true,
