@@ -22,7 +22,7 @@ defmodule ElixirFirstPhoenixProject.Accounts do
   end
 
   @doc """
-  Gets a single account.
+  Gets a single account by id.
 
   Raises `Ecto.NoResultsError` if the Account does not exist.
 
@@ -36,6 +36,26 @@ defmodule ElixirFirstPhoenixProject.Accounts do
 
   """
   def get_account!(id), do: Repo.get!(Account, id)
+
+  @doc """
+  Gets a single account by email.
+
+  Returns 'nil' if the Account doesn't exist.
+
+  ## Examples
+
+      iex> get_account_by_email(test@testemail.com)
+      %Account{}
+
+      iex> get_account_by_email(no_account@testemail.com)
+      nil
+
+  """
+  def get_account_by_email(email) do
+    Account
+    |> where(email: ^email)
+    |> Repo.one()
+  end
 
   @doc """
   Creates a account.
