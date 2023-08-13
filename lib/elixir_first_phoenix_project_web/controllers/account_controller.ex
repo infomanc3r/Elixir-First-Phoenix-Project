@@ -1,8 +1,8 @@
 defmodule ElixirFirstPhoenixProjectWeb.AccountController do
   use ElixirFirstPhoenixProjectWeb, :controller
 
-  alias ElixirFirstPhoenixProject.Accounts
-  alias ElixirFirstPhoenixProject.Accounts.Account
+  alias ElixirFirstPhoenixProjectWeb.Auth.Guardian
+  alias ElixirFirstPhoenixProject.{Accounts, Accounts.Account, Users, Users.User}
 
   action_fallback ElixirFirstPhoenixProjectWeb.FallbackController
 
@@ -12,10 +12,12 @@ defmodule ElixirFirstPhoenixProjectWeb.AccountController do
   end
 
   def create(conn, %{"account" => account_params}) do
-    with {:ok, %Account{} = account} <- Accounts.create_account(account_params) do
+    with {:ok, %Account{} = account} <- Accounts.create_account(account_params),
+          {:ok, token, _claims} <- Guardian.encode_and_sign(account),
+          {:ok, %User{} = _user} <- Users.create_user(account, account_params) do
       conn
       |> put_status(:created)
-      |> render("show.json", account: account)
+      |> render("account_token.json", account: account, token: token)
     end
   end
 
