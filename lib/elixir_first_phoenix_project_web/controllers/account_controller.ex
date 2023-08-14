@@ -1,7 +1,7 @@
 defmodule ElixirFirstPhoenixProjectWeb.AccountController do
   use ElixirFirstPhoenixProjectWeb, :controller
 
-  alias ElixirFirstPhoenixProjectWeb.Auth.Guardian
+  alias ElixirFirstPhoenixProjectWeb.{Auth.Guardian, Auth.ErrorResponse}
   alias ElixirFirstPhoenixProject.{Accounts, Accounts.Account, Users, Users.User}
 
   action_fallback ElixirFirstPhoenixProjectWeb.FallbackController
@@ -18,6 +18,16 @@ defmodule ElixirFirstPhoenixProjectWeb.AccountController do
       conn
       |> put_status(:created)
       |> render("account_token.json", account: account, token: token)
+    end
+  end
+
+  def sign_in(conn, %{"email" => email, "hash_password" => hash_password}) do
+    case Guardian.authenticate(email, hash_password) do
+      {:ok, account, token} ->
+        conn
+        |> put_status(:ok)
+        |> render("account_token.json", %{account: account, token: token})
+      {:error, :unauthorized} -> raise ErrorResponse.Unauthorized, message: "Invalid email or password."
     end
   end
 
