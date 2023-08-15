@@ -14,11 +14,20 @@ defmodule ElixirFirstPhoenixProjectWeb.Router do
     plug :accepts, ["json"]
   end
 
+  pipeline :auth do
+    plug ElixirFirstPhoenixProjectWeb.Auth.Pipeline
+  end
+
   scope "/api", ElixirFirstPhoenixProjectWeb do
     pipe_through :api
     get "/", DefaultController, :index
     post "/accounts/create", AccountController, :create
     post "/accounts/sign_in", AccountController, :sign_in
+  end
+
+  scope "/api", ElixirFirstPhoenixProjectWeb do
+    pipe_through [:api, :auth]
+    get "/accounts/by_id/:id", AccountController, :show
   end
 
 end
