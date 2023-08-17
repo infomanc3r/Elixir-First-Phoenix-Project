@@ -25,15 +25,16 @@ defmodule ElixirFirstPhoenixProjectWeb.AccountController do
     case Guardian.authenticate(email, hash_password) do
       {:ok, account, token} ->
         conn
+        |> Plug.Conn.put_session(:account_id, account.id)
         |> put_status(:ok)
         |> render("account_token.json", %{account: account, token: token})
       {:error, :unauthorized} -> raise ErrorResponse.Unauthorized, message: "Invalid email or password."
     end
   end
 
-  def show(conn, %{"id" => id}) do
-    account = Accounts.get_account!(id)
-    render(conn, "show.json", account: account)
+  def show(conn, %{"id" => _id}) do
+    #account = Accounts.get_account!(id)
+    render(conn, "show.json", account: conn.assigns.account)
   end
 
   def update(conn, %{"id" => id, "account" => account_params}) do

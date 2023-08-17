@@ -12,10 +12,12 @@ defmodule ElixirFirstPhoenixProjectWeb.Router do
 
   pipeline :api do
     plug :accepts, ["json"]
+    plug :fetch_session
   end
 
   pipeline :auth do
     plug ElixirFirstPhoenixProjectWeb.Auth.Pipeline
+    plug ElixirFirstPhoenixProjectWeb.Auth.SetAccount
   end
 
   scope "/api", ElixirFirstPhoenixProjectWeb do
