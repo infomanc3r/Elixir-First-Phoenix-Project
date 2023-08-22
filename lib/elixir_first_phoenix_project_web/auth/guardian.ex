@@ -37,9 +37,10 @@ defmodule ElixirFirstPhoenixProjectWeb.Auth.Guardian do
     with {:ok, claims} <- decode_and_verify(token),
          {:ok, account} <- resource_from_claims(claims),
          {:ok, _old_claims, {new_token, _new_claims}} <- refresh(token) do
-
       {:ok, account, new_token}
-    end
+      else
+        {:error, _message} -> raise ElixirFirstPhoenixProjectWeb.Auth.ErrorResponse.NotFound
+      end
   end
 
   defp validate_password(password, hash_password) do
