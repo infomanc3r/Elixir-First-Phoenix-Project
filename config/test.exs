@@ -6,8 +6,8 @@ import Config
 # to provide built-in test partitioning in CI environment.
 # Run `mix help test` for more information.
 config :elixir_first_phoenix_project, ElixirFirstPhoenixProject.Repo,
-  username: "postgres",
-  password: "postgres",
+  username: "backend_stuff",
+  password: "blork_backend",
   hostname: "localhost",
   database: "elixir_first_phoenix_project_test#{System.get_env("MIX_TEST_PARTITION")}",
   pool: Ecto.Adapters.SQL.Sandbox,
