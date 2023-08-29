@@ -1,7 +1,6 @@
 defmodule ElixirFirstPhoenixProject.Schema.AccountTest do
-  use ExUnit.Case
+  use ElixirFirstPhoenixProject.Support.SchemaCase
   alias ElixirFirstPhoenixProject.Accounts.Account
-  alias Ecto.Changeset
 
   @expected_fields_with_types [
     {:id, :binary_id},
@@ -27,13 +26,7 @@ defmodule ElixirFirstPhoenixProject.Schema.AccountTest do
 
   describe "changeset/2" do
     test "success: returns a valid changeset when given valid arguments" do
-      valid_params = %{
-        "id" => Ecto.UUID.generate(),
-        "email" => "account_test@testemail.com",
-        "hash_password" => "testing_password",
-        "inserted_at" => NaiveDateTime.local_now(),
-        "updated_at" => NaiveDateTime.local_now()
-      }
+      valid_params = valid_params(@expected_fields_with_types)
 
       changeset = Account.changeset(%Account{}, valid_params)
 
