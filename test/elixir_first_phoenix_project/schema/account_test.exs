@@ -79,6 +79,30 @@ defmodule ElixirFirstPhoenixProject.Schema.AccountTest do
         refute errors[field], "Expected no error for optional field: #{field}, but there was one."
       end
     end
+
+    test "error: returns error changeset when an email address is reused" do
+      Ecto.Adapters.SQL.Sandbox.checkout(ElixirFirstPhoenixProject.Repo)
+
+      {:ok, existing_account} =
+        %Account{}
+        |> Account.changeset(valid_params(@expected_fields_with_types))
+        |> ElixirFirstPhoenixProject.Repo.insert()
+
+      changeset_with_repeated_email =
+        %Account{}
+        |> Account.changeset(
+          valid_params(@expected_fields_with_types)
+          |> Map.put("email", existing_account.email)
+          )
+
+      assert {:error, %Changeset{valid?: false, errors: errors}} = ElixirFirstPhoenixProject.Repo.insert(changeset_with_repeated_email)
+
+      assert errors[:email], "The field :email is missing from errors."
+
+      {_, meta} = errors[:email]
+
+      assert meta[:constraint] == :unique, "The validation type, #{meta[:validation]}, is incorrect."
+    end
   end
 
 end
