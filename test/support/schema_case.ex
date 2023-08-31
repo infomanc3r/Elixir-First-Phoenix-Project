@@ -30,4 +30,16 @@ defmodule ElixirFirstPhoenixProject.Support.SchemaCase do
     end
   end
 
+  def invalid_params(fields_with_types) do
+    invalid_value_by_type = %{
+      binary_id: fn -> DateTime.utc_now() end,
+      string: fn -> DateTime.utc_now() end,
+      naive_datetime: fn -> Faker.Lorem.word() end
+    }
+
+    for {field, type} <- fields_with_types, into: %{} do
+      {Atom.to_string(field), invalid_value_by_type[type].()}
+    end
+  end
+
 end
