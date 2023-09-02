@@ -38,4 +38,19 @@ defmodule ElixirFirstPhoenixProject.AccountsTest do
     end
   end
 
+  describe "get_account/1" do
+    test "success: returns account when given a valid UUID" do
+      existing_account = Factory.insert(:account)
+
+      assert returned_account = Accounts.get_account!(existing_account.id)
+      assert returned_account == existing_account
+    end
+
+    test "error: raises Ecto.NoResultsError when the read account doesn't exist" do
+      assert_raise Ecto.NoResultsError, fn ->
+        Accounts.get_account!(Ecto.UUID.autogenerate())
+      end
+    end
+  end
+
 end
