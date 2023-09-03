@@ -37,6 +37,22 @@ defmodule ElixirFirstPhoenixProject.Accounts do
   """
   def get_account!(id), do: Repo.get!(Account, id)
 
+  @doc """
+  Gets a single account preloaded with it's associated User struct data (a 'full' account).
+
+  Returns 'nil' if the account does not exist.
+
+  ## Examples
+
+    iex> get_full_account(123)
+    %Account{
+      %User
+    }
+
+    iex> get_full_account(456)
+    nil
+    
+  """
   def get_full_account(id) do
     Account
     |> where(id: ^id)
