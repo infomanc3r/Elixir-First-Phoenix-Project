@@ -53,4 +53,17 @@ defmodule ElixirFirstPhoenixProject.AccountsTest do
     end
   end
 
+  describe "get_account_by_email/1" do
+    test "success: returns account when given a valid email" do
+      existing_account = Factory.insert(:account)
+
+      assert returned_account = Accounts.get_account_by_email(existing_account.email)
+      assert returned_account == existing_account
+    end
+
+    test "error: raises Ecto.NoResultsError when the read account doesn't exist" do
+      assert Accounts.get_account_by_email(Faker.Internet.email()) == nil
+    end
+  end
+
 end
