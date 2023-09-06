@@ -103,4 +103,14 @@ defmodule ElixirFirstPhoenixProject.AccountsTest do
     end
   end
 
+  describe "delete_account/1" do
+    test "success: deletes account properly" do
+      account = Factory.insert(:account)
+
+      assert {:ok, _deleted_account} = Accounts.delete_account(account)
+
+      refute Repo.get(Account, account.id)
+    end
+  end
+
 end
