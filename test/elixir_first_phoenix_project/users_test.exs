@@ -21,6 +21,12 @@ defmodule ElixirFirstPhoenixProject.UsersTest do
       assert user_from_db.full_name == "Test User"
       assert user_from_db.inserted_at == user_from_db.updated_at
     end
+
+    test "error: returns an error tuple if user cannot be created" do
+      missing_params = %{}
+
+      assert {:error, %Changeset{valid?: false}} = Users.create_user(%Account{}, missing_params)
+    end
   end
 
 end
