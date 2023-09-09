@@ -38,7 +38,7 @@ defmodule ElixirFirstPhoenixProject.AccountsTest do
     end
   end
 
-  describe "get_account/1" do
+  describe "get_account!/1" do
     test "success: returns account when given a valid UUID" do
       existing_account = Factory.insert(:account)
 

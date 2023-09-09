@@ -29,4 +29,23 @@ defmodule ElixirFirstPhoenixProject.UsersTest do
     end
   end
 
+  describe "get_user!/1" do
+    test "success: returns user when given a valid UUID" do
+      params = Factory.string_params_for(:account)
+      {:ok, %Account{} = returned_account} = Accounts.create_account(params)
+      account_from_db = Repo.get(Account, returned_account.id)
+
+      {:ok, %User{} = existing_user} = Users.create_user(account_from_db, %{:full_name => "Test User"})
+
+      assert returned_user = Users.get_user!(existing_user.id)
+      assert returned_user == existing_user
+    end
+
+    test "error: raises Ecto.NoResultsError when the read user doesn't exist" do
+      assert_raise Ecto.NoResultsError, fn ->
+        Users.get_user!(Ecto.UUID.autogenerate())
+      end
+    end
+  end
+
 end
