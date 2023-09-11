@@ -48,6 +48,22 @@ defmodule ElixirFirstPhoenixProject.UsersTest do
     end
   end
 
+  describe "update_user/2" do
+    test "error: returns error tuple if user cannot be updated" do
+      params = Factory.string_params_for(:account)
+      {:ok, %Account{} = returned_account} = Accounts.create_account(params)
+      account_from_db = Repo.get(Account, returned_account.id)
+
+      {:ok, %User{} = existing_user} = Users.create_user(account_from_db, %{:full_name => "Test User"})
+
+      bad_params = %{"full_name" => NaiveDateTime.utc_now()}
+
+      assert {:error, %Changeset{}} = Users.update_user(existing_user, bad_params)
+
+      assert existing_user == Repo.get(User, existing_user.id)
+    end
+  end
+
   describe "delete_user/1" do
     test "success: deletes account properly" do
       params = Factory.string_params_for(:account)
