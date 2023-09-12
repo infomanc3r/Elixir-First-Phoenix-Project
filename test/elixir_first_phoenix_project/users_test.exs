@@ -65,7 +65,7 @@ defmodule ElixirFirstPhoenixProject.UsersTest do
   end
 
   describe "delete_user/1" do
-    test "success: deletes account properly" do
+    test "success: deletes user properly" do
       params = Factory.string_params_for(:account)
       {:ok, %Account{} = returned_account} = Accounts.create_account(params)
       account_from_db = Repo.get(Account, returned_account.id)

@@ -110,6 +110,17 @@ defmodule ElixirFirstPhoenixProject.AccountsTest do
       assert {:ok, _deleted_account} = Accounts.delete_account(account)
       refute Repo.get(Account, account.id)
     end
+    test "error: raises StaleEntryError if account does not exist" do
+      account_not_in_db = %Account{
+        email: Faker.Internet.email(),
+        hash_password: Faker.Internet.slug(),
+        id: Ecto.UUID.autogenerate()
+      }
+
+      assert_raise Ecto.StaleEntryError, fn ->
+        Accounts.delete_account(account_not_in_db)
+      end
+    end
   end
 
 end
