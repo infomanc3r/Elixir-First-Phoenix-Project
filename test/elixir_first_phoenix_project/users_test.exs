@@ -75,6 +75,15 @@ defmodule ElixirFirstPhoenixProject.UsersTest do
       assert {:ok, _deleted_user} = Users.delete_user(existing_user)
       refute Repo.get(User, existing_user.id)
     end
+    test "error: raises StaleEntryError if user does not exist" do
+      user_not_in_db = %User{
+        id: Ecto.UUID.autogenerate()
+      }
+
+      assert_raise Ecto.StaleEntryError, fn ->
+        Users.delete_user(user_not_in_db)
+      end
+    end
   end
 
 end
