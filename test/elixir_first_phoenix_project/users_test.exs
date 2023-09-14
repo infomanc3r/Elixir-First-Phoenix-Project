@@ -49,6 +49,24 @@ defmodule ElixirFirstPhoenixProject.UsersTest do
   end
 
   describe "update_user/2" do
+    test "success: updates database and returns user" do
+      account_params = Factory.string_params_for(:account)
+      {:ok, %Account{} = returned_account} = Accounts.create_account(account_params)
+      account_from_db = Repo.get(Account, returned_account.id)
+
+      {:ok, %User{} = existing_user} = Users.create_user(account_from_db, %{:full_name => "Test User"})
+
+      assert {:ok, returned_user} = Users.update_user(existing_user, %{:full_name => "Test User Two"})
+
+      user_from_db = Repo.get(User, returned_user.id)
+
+      assert returned_user == user_from_db
+
+      assert returned_user.full_name == user_from_db.full_name
+
+      assert returned_user.full_name == "Test User Two"
+      assert user_from_db.full_name == "Test User Two"
+    end
     test "error: returns error tuple if user cannot be updated" do
       params = Factory.string_params_for(:account)
       {:ok, %Account{} = returned_account} = Accounts.create_account(params)
