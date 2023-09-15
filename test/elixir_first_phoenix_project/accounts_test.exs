@@ -123,4 +123,14 @@ defmodule ElixirFirstPhoenixProject.AccountsTest do
     end
   end
 
+  describe "list_accounts/0" do
+    test "success: returns a list of all Accounts in db" do
+      accounts = Enum.map(1..3, fn _ -> Factory.insert(:account) end)
+
+      assert returned_accounts = Accounts.list_accounts()
+
+      assert returned_accounts == accounts
+    end
+  end
+  
 end

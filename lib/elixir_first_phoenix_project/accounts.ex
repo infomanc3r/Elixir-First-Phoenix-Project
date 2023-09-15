@@ -51,7 +51,7 @@ defmodule ElixirFirstPhoenixProject.Accounts do
 
     iex> get_full_account(456)
     nil
-    
+
   """
   def get_full_account(id) do
     Account
@@ -144,4 +144,5 @@ defmodule ElixirFirstPhoenixProject.Accounts do
   def change_account(%Account{} = account, attrs \\ %{}) do
     Account.changeset(account, attrs)
   end
+  
 end
