@@ -67,6 +67,7 @@ defmodule ElixirFirstPhoenixProject.UsersTest do
       assert returned_user.full_name == "Test User Two"
       assert user_from_db.full_name == "Test User Two"
     end
+
     test "error: returns error tuple if user cannot be updated" do
       params = Factory.string_params_for(:account)
       {:ok, %Account{} = returned_account} = Accounts.create_account(params)
@@ -93,6 +94,7 @@ defmodule ElixirFirstPhoenixProject.UsersTest do
       assert {:ok, _deleted_user} = Users.delete_user(existing_user)
       refute Repo.get(User, existing_user.id)
     end
+    
     test "error: raises StaleEntryError if user does not exist" do
       user_not_in_db = %User{
         id: Ecto.UUID.autogenerate()
