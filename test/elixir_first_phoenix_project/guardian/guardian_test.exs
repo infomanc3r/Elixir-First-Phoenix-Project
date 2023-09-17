@@ -28,7 +28,7 @@ defmodule ElixirFirstPhoenixProject.Guardian.GuardianTest do
       account_params = Factory.string_params_for(:account)
       {:ok, %Account{} = returned_account} = Accounts.create_account(account_params)
 
-      {:ok, account, token} = ElixirFirstPhoenixProjectWeb.Auth.Guardian.authenticate(returned_account.email, account_params["hash_password"])
+      {:ok, _account, token} = ElixirFirstPhoenixProjectWeb.Auth.Guardian.authenticate(returned_account.email, account_params["hash_password"])
 
       assert {:ok, account, new_token} = ElixirFirstPhoenixProjectWeb.Auth.Guardian.authenticate(token)
       assert account

@@ -23,4 +23,5 @@ defmodule ElixirFirstPhoenixProject.Users.User do
     |> cast(attrs, all_fields())
     |> validate_required(all_fields() -- @optional_fields)
   end
+  
 end

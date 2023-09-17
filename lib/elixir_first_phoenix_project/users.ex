@@ -35,8 +35,10 @@ defmodule ElixirFirstPhoenixProject.Users do
       ** (Ecto.NoResultsError)
 
   """
-  def get_user!(id), do: Repo.get!(User, id)
-
+  def get_user!(id) do
+    Repo.get!(User, id)
+    |> Repo.preload(:account)
+  end
   @doc """
   Creates a user.
 
@@ -70,6 +72,7 @@ defmodule ElixirFirstPhoenixProject.Users do
   """
   def update_user(%User{} = user, attrs) do
     user
+    |> Repo.preload(:account)
     |> User.changeset(attrs)
     |> Repo.update()
   end

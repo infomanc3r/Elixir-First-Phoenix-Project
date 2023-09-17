@@ -105,12 +105,12 @@ defmodule ElixirFirstPhoenixProject.AccountsTest do
 
   describe "delete_account/1" do
     test "success: deletes account properly" do
-      account = Factory.insert(:account)
+      existing_account = Factory.insert(:account)
 
-      assert {:ok, _deleted_account} = Accounts.delete_account(account)
-      refute Repo.get(Account, account.id)
+      assert {:ok, _deleted_account} = Accounts.delete_account(existing_account)
+      refute Repo.get(Account, existing_account.id)
     end
-    
+
     test "error: raises StaleEntryError if account does not exist" do
       account_not_in_db = %Account{
         email: Faker.Internet.email(),
@@ -126,11 +126,11 @@ defmodule ElixirFirstPhoenixProject.AccountsTest do
 
   describe "list_accounts/0" do
     test "success: returns a list of all Accounts in db" do
-      accounts = Enum.map(1..3, fn _ -> Factory.insert(:account) end)
+      all_accounts = Enum.map(1..3, fn _ -> Factory.insert(:account) end)
 
       assert returned_accounts = Accounts.list_accounts()
 
-      assert returned_accounts == accounts
+      assert returned_accounts == all_accounts
     end
   end
 

@@ -1,6 +1,6 @@
 defmodule ElixirFirstPhoenixProject.UsersTest do
   use ElixirFirstPhoenixProject.Support.DataCase
-  alias ElixirFirstPhoenixProject.{Users, Users.User, Accounts, Accounts.Account}
+  alias ElixirFirstPhoenixProject.{Users, Users.User, Accounts.Account}
 
   setup do
     Ecto.Adapters.SQL.Sandbox.checkout(ElixirFirstPhoenixProject.Repo)
@@ -8,12 +8,9 @@ defmodule ElixirFirstPhoenixProject.UsersTest do
 
   describe "create_user/2" do
     test "success: inserts a user into database and returns that user" do
-      params = Factory.string_params_for(:account)
-      {:ok, %Account{} = returned_account} = Accounts.create_account(params)
-      account_from_db = Repo.get(Account, returned_account.id)
+      account = Factory.insert(:account)
 
-      assert{:ok, %User{} = created_user} = Users.create_user(account_from_db,
-        %{:full_name => "Test User"})
+      assert{:ok, %User{} = created_user} = Users.create_user(account, %{:full_name => "Test User"})
 
       user_from_db = Repo.get(User, created_user.id)
 
@@ -31,11 +28,7 @@ defmodule ElixirFirstPhoenixProject.UsersTest do
 
   describe "get_user!/1" do
     test "success: returns user when given a valid UUID" do
-      params = Factory.string_params_for(:account)
-      {:ok, %Account{} = returned_account} = Accounts.create_account(params)
-      account_from_db = Repo.get(Account, returned_account.id)
-
-      {:ok, %User{} = existing_user} = Users.create_user(account_from_db, %{:full_name => "Test User"})
+      existing_user = Factory.insert(:user)
 
       assert returned_user = Users.get_user!(existing_user.id)
       assert returned_user == existing_user
@@ -50,15 +43,12 @@ defmodule ElixirFirstPhoenixProject.UsersTest do
 
   describe "update_user/2" do
     test "success: updates database and returns user" do
-      account_params = Factory.string_params_for(:account)
-      {:ok, %Account{} = returned_account} = Accounts.create_account(account_params)
-      account_from_db = Repo.get(Account, returned_account.id)
-
-      {:ok, %User{} = existing_user} = Users.create_user(account_from_db, %{:full_name => "Test User"})
+      existing_user = Factory.insert(:user)
 
       assert {:ok, returned_user} = Users.update_user(existing_user, %{:full_name => "Test User Two"})
 
       user_from_db = Repo.get(User, returned_user.id)
+      |> Repo.preload(:account)
 
       assert returned_user == user_from_db
 
@@ -69,32 +59,27 @@ defmodule ElixirFirstPhoenixProject.UsersTest do
     end
 
     test "error: returns error tuple if user cannot be updated" do
-      params = Factory.string_params_for(:account)
-      {:ok, %Account{} = returned_account} = Accounts.create_account(params)
-      account_from_db = Repo.get(Account, returned_account.id)
-
-      {:ok, %User{} = existing_user} = Users.create_user(account_from_db, %{:full_name => "Test User"})
+      existing_user = Factory.insert(:user)
 
       bad_params = %{"full_name" => NaiveDateTime.utc_now()}
 
       assert {:error, %Changeset{}} = Users.update_user(existing_user, bad_params)
 
-      assert existing_user == Repo.get(User, existing_user.id)
+      user_from_db = Repo.get(User, existing_user.id)
+      |> Repo.preload(:account)
+
+      assert existing_user == user_from_db
     end
   end
 
   describe "delete_user/1" do
     test "success: deletes user properly" do
-      params = Factory.string_params_for(:account)
-      {:ok, %Account{} = returned_account} = Accounts.create_account(params)
-      account_from_db = Repo.get(Account, returned_account.id)
-
-      {:ok, %User{} = existing_user} = Users.create_user(account_from_db, %{:full_name => "Test User"})
+      existing_user = Factory.insert(:user)
 
       assert {:ok, _deleted_user} = Users.delete_user(existing_user)
       refute Repo.get(User, existing_user.id)
     end
-    
+
     test "error: raises StaleEntryError if user does not exist" do
       user_not_in_db = %User{
         id: Ecto.UUID.autogenerate()
