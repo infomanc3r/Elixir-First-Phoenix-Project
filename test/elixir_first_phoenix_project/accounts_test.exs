@@ -77,6 +77,10 @@ defmodule ElixirFirstPhoenixProject.AccountsTest do
       assert returned_account == existing_account
       assert returned_account.user == existing_account.user
     end
+
+    test "error: returns nil when the read account doesn't exist" do
+      refute Accounts.get_full_account(Ecto.UUID.autogenerate())
+    end
   end
 
   describe "update_account/2" do
