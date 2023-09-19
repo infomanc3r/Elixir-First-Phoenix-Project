@@ -66,6 +66,19 @@ defmodule ElixirFirstPhoenixProject.AccountsTest do
     end
   end
 
+  describe "get_full_account/1" do
+    test "success: returns full account with preloaded user when given a valid account id" do
+      existing_user = Factory.insert(:user)
+
+      existing_account = existing_user.account
+      |> Repo.preload(:user)
+
+      assert returned_account = Accounts.get_full_account(existing_account.id)
+      assert returned_account == existing_account
+      assert returned_account.user == existing_account.user
+    end
+  end
+
   describe "update_account/2" do
     test "success: updates database and returns account" do
       existing_account = Factory.insert(:account)
