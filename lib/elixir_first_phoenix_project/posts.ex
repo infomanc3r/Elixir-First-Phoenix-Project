@@ -38,6 +38,24 @@ defmodule ElixirFirstPhoenixProject.Posts do
   def get_post!(id), do: Repo.get!(Post, id)
 
   @doc """
+  Gets all posts by a specific user.
+
+  Raises 'Ecto.StaleEntryError' if the User does not exist.
+
+  ## Examples
+      iex> get_posts_by_user!(123)
+      [%Post{}, ...]
+
+      iex> get_posts_by_user!(456)
+      ** (Ecto.StaleEntryError)
+  """
+
+  def get_posts_by_user!(user_id) do
+    Repo.all(Post)
+    |> where(user_id: ^user_id)
+  end
+
+  @doc """
   Creates a post.
 
   ## Examples

@@ -34,7 +34,11 @@ defmodule ElixirFirstPhoenixProjectWeb.Router do
     get "/accounts/sign_out", AccountController, :sign_out
     get "/accounts/refresh_session", AccountController, :refresh_session
     post "/accounts/update", AccountController, :update
+
     put "/users/update", UserController, :update
+
+    get "/posts/by_id/:id", PostController, :show
+    get "/posts/by_user/:user_id", PostController, :index
   end
 
 end

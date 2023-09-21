@@ -15,7 +15,6 @@ defmodule ElixirFirstPhoenixProjectWeb.LikeController do
     with {:ok, %Like{} = like} <- Likes.create_like(like_params) do
       conn
       |> put_status(:created)
-      |> put_resp_header("location", Routes.like_path(conn, :show, like))
       |> render("show.json", like: like)
     end
   end

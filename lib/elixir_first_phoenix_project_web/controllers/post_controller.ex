@@ -15,7 +15,6 @@ defmodule ElixirFirstPhoenixProjectWeb.PostController do
     with {:ok, %Post{} = post} <- Posts.create_post(post_params) do
       conn
       |> put_status(:created)
-      |> put_resp_header("location", Routes.post_path(conn, :show, post))
       |> render("show.json", post: post)
     end
   end
@@ -23,6 +22,11 @@ defmodule ElixirFirstPhoenixProjectWeb.PostController do
   def show(conn, %{"id" => id}) do
     post = Posts.get_post!(id)
     render(conn, "show.json", post: post)
+  end
+
+  def by_user(conn, %{"user_id" => user_id}) do
+    posts = Posts.get_posts_by_user!(user_id)
+    render(conn, "index.json", posts: posts)
   end
 
   def update(conn, %{"id" => id, "post" => post_params}) do
